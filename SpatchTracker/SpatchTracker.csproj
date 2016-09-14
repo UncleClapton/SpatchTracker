@@ -105,6 +105,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\Data\DataItem.cs" />
+    <Compile Include="Models\Data\Rat.cs" />
+    <Compile Include="Models\Data\Rescue.cs" />
     <Compile Include="Services\LoggingService.cs" />
     <Compile Include="Services\ProductInfo.cs" />
     <Compile Include="Services\Settings.cs" />
