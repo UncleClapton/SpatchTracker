@@ -3,28 +3,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Livet;
 
 namespace SpatchTracker.Models.Data
 {
-    public class Rat
+    public class Rat : NotificationObject
     {
-        public string UUID { get; set; }
-        public string CmdrName { get; set; }
-        public List<DataItem> Data { get; set; }
-        public DateTime Joined { get; set; }
-        public Platform Platform { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public string UUID { get; set; } = "N/A";
+        public string CmdrName { get; set; } = "N/A";
+        public Platform CmdrPlatform { get; set; } = Platform.PC;
 
-        public Rat ()
+        public Rat () { }
+
+        public Rat (string uuid, string cmdrName, Platform cmdrPlatform)
         {
-
+            UUID = uuid;
+            CmdrName = cmdrName;
+            CmdrPlatform = cmdrPlatform;
         }
 
-        public Rat (string newUUID, string newCmdrName, List<DataItem> data, DateTime joined, Platform platform, DateTime createdAt)
-        {
-
-        }
-
-
+        
     }
+
+    public enum Platform { PC = 0, XB = 1, Unknown = 2 }
 }

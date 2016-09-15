@@ -28,5 +28,5 @@ namespace SpatchTracker.Models.Data
         private string firstLimpet;
     }
 
-    public enum Platform { pc = 0, xb = 1 }
+
 }
