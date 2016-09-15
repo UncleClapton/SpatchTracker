@@ -86,6 +86,24 @@ namespace SpatchTracker.Services
             }
         }
         #endregion
+
+        #region Logger - LogLevel
+        private int? _receiverPort;
+        public int ReceiverPort
+        {
+            get { return _receiverPort ?? 4378; }
+            set
+            {
+                if (this._receiverPort != value)
+                {
+                    this._receiverPort = value;
+                    this.RaisePropertyChanged();
+                }
+            }
+        }
+        #endregion
+
+
         #endregion
 
         #region Constructor
