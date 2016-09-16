@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SpatchTracker.Models.Data
+namespace SpatchTracker.Models
 {
-    class RescueRat : Rat
+    public class RescueRat : Rat
     {
+        //there now that they are in a reagion, maybe I can get some work done on this class.
+        #region Status Bools
         private bool _isFriend;
         public bool IsFriend
         {
@@ -186,6 +188,14 @@ namespace SpatchTracker.Models.Data
                     }
                 }
             }
+        }
+        #endregion
+
+        public RescueRat(Rat baseRat)
+        {
+            this.UUID = baseRat.UUID;
+            this.CmdrName = baseRat.CmdrName;
+            this.CmdrPlatform = baseRat.CmdrPlatform;
         }
     }
 }

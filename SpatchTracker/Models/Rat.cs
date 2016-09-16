@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Livet;
 
-namespace SpatchTracker.Models.Data
+namespace SpatchTracker.Models
 {
     public class Rat : NotificationObject
     {
