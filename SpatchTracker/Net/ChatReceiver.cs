@@ -9,6 +9,8 @@ using uhttpsharp.Listeners;
 using uhttpsharp.RequestProviders;
 using System.Net;
 using SpatchTracker.Services;
+using System.Text.RegularExpressions;
+using SpatchTracker.Models;
 
 namespace SpatchTracker.Net
 {
@@ -41,6 +43,7 @@ namespace SpatchTracker.Net
                     switch (messageType)
                     {
                         case "RSIG":
+                            HandleIncomingRsignal(context);
                             break;
                         default:
                             LoggingService.Current.Log($"ChatReceiver has recieved a message, is of invalid type. MT = {messageType}", LogType.Info, LogLevel.Info);
@@ -65,8 +68,15 @@ namespace SpatchTracker.Net
             //EX: RATSIGNAL - CMDR A Client - System: SystemName - Platform: PC - O2: OK - Language: English (en-US) - IRC Nickname: A_Client (Case #1)
             var message = GetQueryStringProperty(context.Request, "msg");
 
+            string cmdr = Regex.Match(message, @"CMDR (.*?) -", RegexOptions.IgnoreCase).Value;
+            string system = Regex.Match(message, @"System: (.*?) -", RegexOptions.IgnoreCase).Value;
+            Platform platform = Regex.Match(message, @"Platform: (XB|PC) -", RegexOptions.IgnoreCase).Value == "XB" ? Platform.XB : Platform.PC;
+            bool codeRed = Regex.Match(message, @"O2: ((?:NOT )?OK) -", RegexOptions.IgnoreCase).Value == "NOT OK" ? true : false;
+            string language = Regex.Match(message, @"Language: (.*?) -", RegexOptions.IgnoreCase).Value;
+            string ircNick = Regex.Match(message, @"IRC Nickname: (.*?) \(", RegexOptions.IgnoreCase).Value ?? cmdr;
+            int boardIndex = int.Parse(Regex.Match(message, @"\(Case #(.*)\)", RegexOptions.IgnoreCase).Value);
 
-
+            LoggingService.Current.Log($"Incoming Client:\nCMDR: {cmdr}\nSystem: {system}\nPlatform : {platform.ToString()}\nCR: {codeRed.ToString()}\nLang: {language}\nIRC: {ircNick}\nCase #{boardIndex}", LogType.Incoming, LogLevel.Debug);
         }
 
 
