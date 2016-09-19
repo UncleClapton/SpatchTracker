@@ -1,9 +1,7 @@
 ﻿using Livet;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace SpatchTracker.Services
 {
@@ -40,24 +38,6 @@ namespace SpatchTracker.Services
         private string _SessionLogFilePath;
         #endregion
 
-        #region Properties
-        #region LogBuffer
-        private List<ListBoxItem> _LogBuffer;
-        public List<ListBoxItem> LogBuffer
-        {
-            get { return _LogBuffer; }
-            private set
-            {
-                if (_LogBuffer != value)
-                {
-                    _LogBuffer = value;
-                    this.RaisePropertyChanged();
-                }
-            }
-        }
-        #endregion
-        #endregion
-
         #region Constructor
         /// <summary>
         /// Constructs an instance of LoggingService.
@@ -66,7 +46,6 @@ namespace SpatchTracker.Services
         internal LoggingService(string logFilePath = null)
         {
             _SessionLogFilePath = logFilePath ?? GetLogPath();
-            LogBuffer = new List<ListBoxItem>();
         }
         #endregion
 
@@ -77,44 +56,31 @@ namespace SpatchTracker.Services
         {
             if (Settings.Current.LoggerLevel < Convert.ToInt32(logLevel)) return;
 
-            ListBoxItem newLog = new ListBoxItem();
-
             string prefix;
             switch (logType)
             {
                 case LogType.Incoming:
                     prefix = "<<";
-                    newLog.Foreground = Brushes.LightGray;
                     break;
                 case LogType.Outgoing:
                     prefix = ">>";
-                    newLog.Foreground = Brushes.LightGray;
                     break;
                 case LogType.Info:
                     prefix = "**";
-                    newLog.Foreground = Brushes.DimGray;
                     break;
                 case LogType.Error:
                     prefix = "XX";
-                    newLog.Background = Brushes.Yellow;
-                    newLog.Foreground = Brushes.Black;
                     break;
                 case LogType.Alert:
                     prefix = "!!";
-                    newLog.Background = Brushes.Red;
-                    newLog.Foreground = Brushes.White;
-                    newLog.BorderBrush = Brushes.Black;
                     break;
                 default:
                     prefix = "??";
-                    newLog.Foreground = Brushes.LightGray;
                     break;
             }
 
-            newLog.Content = String.Format("{2:HH:mm:ss} {0} {1}", prefix, message, DateTime.Now);
-            LogBuffer.Add(newLog);
-            Clapton.IO.File.TryWriteToFile(_SessionLogFilePath,newLog.Content + Environment.NewLine, true);
-            this.RaisePropertyChanged(nameof(LogBuffer));
+            Clapton.IO.File.TryWriteToFile(_SessionLogFilePath, String.Format("{2:HH:mm:ss} {0} {1}", prefix, message, DateTime.Now) + Environment.NewLine, true);
+            return;
         }
         #endregion
 

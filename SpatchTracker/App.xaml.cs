@@ -12,6 +12,8 @@ namespace SpatchTracker
     public partial class App : Application
     {
         public static ProductInfo ProductInfo { get; private set; }
+        private Net.ChatReceiver ListenerReceiver { get; set; }
+        
         
         public App()
         {
@@ -42,6 +44,9 @@ namespace SpatchTracker
             MainWindow.Show();
 
             MainWindow.Closing += MainWindow_Closing;
+
+            ListenerReceiver = new Net.ChatReceiver();
+
         }
 
         protected override void OnExit(ExitEventArgs e)
@@ -49,6 +54,7 @@ namespace SpatchTracker
             base.OnExit(e);
             Settings.Current.SaveToFile();
             LoggingService.Current.Log("AppSessionEnd - " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), LogType.Info, LogLevel.Info);
+            ListenerReceiver.Dispose();
         }
 
         #region MainWindow_Closing

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Livet;
+﻿using Livet;
 
 namespace SpatchTracker.Models
 {
@@ -21,8 +16,6 @@ namespace SpatchTracker.Models
             CmdrName = cmdrName;
             CmdrPlatform = cmdrPlatform;
         }
-
-        
     }
 
     public enum Platform { PC = 0, XB = 1, Unknown = 2 }

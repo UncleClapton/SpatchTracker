@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SpatchTracker.Models
 {
@@ -23,8 +20,5 @@ namespace SpatchTracker.Models
         public bool Epic { get; set; } = false;
 
         public Rescue () {}
-
     }
-
-
 }
