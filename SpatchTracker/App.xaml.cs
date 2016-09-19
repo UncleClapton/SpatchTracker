@@ -33,8 +33,7 @@ namespace SpatchTracker
 
             Settings.Load();
 
-            StatusService.Load();
-            StatusService.Current.Set("Starting up...");
+            StatusService.Load("Starting up...");
             StatusService.Current.Notify("Welcome to SpatchTracker " + ProductInfo.VersionString);
 
             LoggingService.Load();
@@ -47,6 +46,7 @@ namespace SpatchTracker
 
             ListenerReceiver = new Net.ChatReceiver();
 
+            StatusService.Current.Set("Ready.");
         }
 
         protected override void OnExit(ExitEventArgs e)
