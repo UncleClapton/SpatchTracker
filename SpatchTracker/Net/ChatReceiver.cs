@@ -66,12 +66,6 @@ namespace SpatchTracker.Net
             ListenerServer.Start();
         }
 
-        private static string GetQueryStringProperty(IHttpRequest request, string queryStringName)
-        {
-            var propertyValue = "";
-            request.QueryString.TryGetByName(queryStringName, out propertyValue);
-            return WebUtility.UrlDecode(propertyValue);
-        }
 
         private void HandleIncomingRatsignal(IHttpContext context)
         {
