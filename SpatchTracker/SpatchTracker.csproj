@@ -118,6 +118,7 @@
     <Compile Include="Models\Rescue.cs" />
     <Compile Include="Models\RescueRat.cs" />
     <Compile Include="Net\ChatReceiver.cs" />
+    <Compile Include="Net\MessageTypes.cs" />
     <Compile Include="Services\LoggingService.cs" />
     <Compile Include="Services\ProductInfo.cs" />
     <Compile Include="Services\Settings.cs" />

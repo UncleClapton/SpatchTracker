@@ -1,10 +1,11 @@
-﻿using Clapton.Extensions;
-using SpatchTracker.Models;
+﻿using SpatchTracker.Extensions;
 using SpatchTracker.Services;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
-using System.Text.RegularExpressions;
+using System.Reflection;
 using System.Threading.Tasks;
 using uhttpsharp;
 using uhttpsharp.Listeners;
@@ -15,10 +16,13 @@ namespace SpatchTracker.Net
     public class ChatReceiver : IDisposable
     {
         public HttpServer ListenerServer { get; private set; }
+        private List<MethodInfo> MessageTypesInfo { get; set; }
 
         public ChatReceiver()
         {
             ListenerServer = new HttpServer(new HttpRequestProvider());
+
+            MessageTypesInfo = typeof(MessageTypes).GetMethods().Where(x => x.GetCustomAttributes(false).OfType<MessageType>().Count() > 0).ToList();
 
             try
             {
@@ -27,8 +31,7 @@ namespace SpatchTracker.Net
             }
             catch (Exception e)
             {
-                LoggingService.Current.Log("Unable to start Chat Event Receiver. Possible port conflict!", LogType.Error, LogLevel.Error);
-                LoggingService.Current.Log($"Error while initilizing HTTP Server.\n------ Start Stack Trace ------\n{e.Message}\n{e.StackTrace}\n------ End stack trace ------", LogType.Error, LogLevel.Verbose);
+                LoggingService.Current.Log("Unable to start Chat Event Receiver. Possible port conflict! Check error logs.", LogType.Error, LogLevel.Error);
                 Clapton.Exceptions.ExceptionHandling.ReportException(this, e);
             }
 
@@ -36,29 +39,28 @@ namespace SpatchTracker.Net
             {
                 if (context.Request.Method == HttpMethods.Post)
                 {
-                    var messageType = GetQueryStringProperty(context.Request, "mt") ?? "none";
+                    var messageType = context.Request.GetQueryStringProperty("mt") ?? "none";
 
-                    switch (messageType.ToLower())
+                    Task.Run(() =>
                     {
-                        case "rsig":
-                            context.Response = HttpResponse.CreateWithMessage(HttpResponseCode.Ok, "Rsignal recieived, Updated board.", false, "Do note, I am in fact a teapot.");
-                            Task.Run(() => HandleIncomingRatsignal(context));
-                            break;
-                        case "test":
-                            context.Response = HttpResponse.CreateWithMessage(HttpResponseCode.Ok, "Test recieved and noted.", false, "Test request, please ignore");
-                            Task.Run(() => HandleIncomingTest(context));
-                            break;
-                        default:
-                            context.Response = HttpResponse.CreateWithMessage(HttpResponseCode.BadRequest, "Bad Message Type (mt). Throwing out request.", false);
-                            LoggingService.Current.Log($"ChatReceiver has recieved a message, but it is of invalid message type.", LogType.Info, LogLevel.Info);
-                            break;
-                    }
+                        try
+                        {
+                            MethodInfo method = MessageTypesInfo.Where(x => x.GetCustomAttribute<MessageType>(false).messageCode.ToLower() == messageType.ToLower()).First();
+                            method.Invoke(null, new object[] { context.Request.GetQueryStringProperty("msg") });
+                        }
+                        catch (InvalidOperationException)
+                        {
+                            LoggingService.Current.Log($"ChatReceiver has recieved a message, but it is of invalid message type. mt={messageType}", LogType.Error, LogLevel.Error);
+                        }
+                    });
+
+                    context.Response = HttpResponse.CreateWithMessage(HttpResponseCode.Ok, "Message recieved, We can handle it from here.", false);
                     return next();
                 }
                 else
                 {
-                    LoggingService.Current.Log($"ChatReceiver has recieved a message, but it is of invalid request method.", LogType.Info, LogLevel.Info);
-                    context.Response = HttpResponse.CreateWithMessage(HttpResponseCode.BadRequest, "Bad method. This server only accepts POSTs", false);
+                    LoggingService.Current.Log("ChatReceiver has recieved a message, but it is of invalid request method.", LogType.Info, LogLevel.Info);
+                    context.Response = HttpResponse.CreateWithMessage(HttpResponseCode.BadRequest, "Bad method. This server only accepts POST requests.", false);
                     return next();
                 }
             });
@@ -66,30 +68,21 @@ namespace SpatchTracker.Net
             ListenerServer.Start();
         }
 
-
-        private void HandleIncomingRatsignal(IHttpContext context)
-        {
-            //EX: RATSIGNAL - CMDR A Client - System: SystemName - Platform: PC - O2: OK - Language: English (en-US) - IRC Nickname: A_Client (Case #1)
-            var message = GetQueryStringProperty(context.Request, "msg");
-
-            string cmdr = Regex.Match(message, @"CMDR (.*?) -", RegexOptions.IgnoreCase).Groups[1].Value ?? "Unknown";
-            string system = Regex.Match(message, @"System: (.*?) -", RegexOptions.IgnoreCase).Groups[1].Value ?? "Unknown";
-            Platform platform = (Regex.Match(message, @"Platform: (XB|PC) -", RegexOptions.IgnoreCase).Groups[1].Value ?? "PC") == "XB" ? Platform.XB : Platform.PC;
-            bool codeRed = (Regex.Match(message, @"O2: ((?:NOT )?OK) -", RegexOptions.IgnoreCase).Groups[1].Value ?? "OK") == "NOT OK" ? true : false;
-            string language = Regex.Match(message, @"Language: (.*?) -", RegexOptions.IgnoreCase).Groups[1].Value ?? "Unknown";
-            string ircNick = Regex.Match(message, @"IRC Nickname: (.*?) \(", RegexOptions.IgnoreCase).Groups[1].Value ?? cmdr ?? "Unknown";
-            int? boardIndex = (Regex.Match(message, @"\(Case #(.*)\)", RegexOptions.IgnoreCase).Groups[1].Value ?? "0").ToNullableInt() ?? 0;
-            LoggingService.Current.Log($"Incoming Client: CMDR {cmdr} | System: {system} | Platform : {platform.ToString()} | CR: {codeRed.ToString()} | Lang: {language} | IRC: {ircNick} | Case #{boardIndex}", LogType.Incoming, LogLevel.Debug);
-        }
-
-        private void HandleIncomingTest(IHttpContext context)
-        {
-            LoggingService.Current.Log($"Test Signal recieved with message:{GetQueryStringProperty(context.Request,"msg")}", LogType.Incoming, LogLevel.Debug);
-        }
-
         public void Dispose()
         {
             ListenerServer.Dispose();
         }
     }
+
+    public class MessageType : Attribute
+    {
+        public string messageCode { get; private set; }
+
+        public MessageType(string mt)
+        {
+            messageCode = mt;
+        }
+    }
+
+
 }
