@@ -1,7 +1,8 @@
 ﻿using Livet;
 using System;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
+using System.Threading;
+using System.Threading.Tasks;
+
 
 namespace SpatchTracker.Services
 {
@@ -16,17 +17,16 @@ namespace SpatchTracker.Services
         /// <summary>
         /// Loads a new instance
         /// </summary>
-        public static void Load()
+        public static void Load(string status)
         {
             if (Current == null)
             {
-                Current = new StatusService();
+                Current = new StatusService(status);
             }
         }
         #endregion
 
         #region StatusMessage Property
-        private readonly Subject<string> _Notifier;
         private string _PersistentMessage = "";
         private string _NotificationMessage;
 
@@ -48,21 +48,7 @@ namespace SpatchTracker.Services
         #endregion
 
         #region Constructor
-        internal StatusService()
-        {
-            this._Notifier = new Subject<string>();
-            this._Notifier.Do(x =>
-            {
-                this._NotificationMessage = x;
-                this.RaisePropertyChanged(nameof(StatusMessage));
-            })
-            .Throttle(TimeSpan.FromMilliseconds(5000))
-            .Subscribe(_ =>
-            {
-                this._NotificationMessage = null;
-                this.RaisePropertyChanged(nameof(StatusMessage));
-            });
-        }
+        internal StatusService(string status) { StatusMessage = status; }
         #endregion
 
         #region Functions
@@ -81,7 +67,18 @@ namespace SpatchTracker.Services
         /// <param name="message">Message to be displayed</param>
         public void Notify(string message)
         {
-            this._Notifier.OnNext(message);
+
+            _NotificationMessage = message;
+            this.RaisePropertyChanged(nameof(StatusMessage));
+
+            Task.Run(async () =>
+            {
+                await Task.Delay(2000);
+                _NotificationMessage = null;
+                this.RaisePropertyChanged(nameof(StatusMessage));
+            });
+
+            return;
         }
         #endregion
     }
