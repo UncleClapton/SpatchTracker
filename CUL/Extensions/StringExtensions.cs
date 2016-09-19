@@ -19,6 +19,13 @@ namespace Clapton.Extensions
             return obj.Equals(value, StringComparison.InvariantCultureIgnoreCase);
         }
 
+        public static int? ToNullableInt(this string obj)
+        {
+            int value;
+            if (int.TryParse(obj, out value)) return value;
+            return null;
+        }
+
         /// <summary>
         /// 
         /// </summary>
