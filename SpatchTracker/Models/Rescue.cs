@@ -5,7 +5,7 @@ namespace SpatchTracker.Models
 {
     public class Rescue
     {
-        public string UUID { get; set; } = "UNKNOWN";
+        public int BoardID { get; set; } = 100;
         public string ClientNick { get; set; } = "";
         public bool Active { get; set; } = true;
         public string ClientName { get; set; } = "";
