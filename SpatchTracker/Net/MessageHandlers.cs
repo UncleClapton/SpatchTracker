@@ -6,10 +6,10 @@ using uhttpsharp;
 
 namespace SpatchTracker.Net
 {
-    public static class MessageTypes
+    public static class MessageHandlers
     {
         [MessageType("rsig")]
-        public static void HandleIncomingRatsignal(string message)
+        public static void HandleRatsignal(string message)
         {
             //EX: RATSIGNAL - CMDR A Client - System: SystemName - Platform: PC - O2: OK - Language: English (en-US) - IRC Nickname: A_Client (Case #1)
 
@@ -23,14 +23,17 @@ namespace SpatchTracker.Net
             LoggingService.Current.Log($"Incoming Client: CMDR {cmdr} | System: {system} | Platform : {platform.ToString()} | CR: {codeRed.ToString()} | Lang: {language} | IRC: {ircNick} | Case #{boardIndex}", LogType.Incoming, LogLevel.Debug);
         }
 
-        [MessageType("inject")]
-        public static void HandleIncomingAssign(string message)
+        [MessageType("assign")]
+        public static void HandleAssign(string message)
         {
+            if (message.StartsWith("!assign", "!go", "!add"))
+            {
 
+            }
         }
 
         [MessageType("ping")]
-        public static void HandleIncomingTest(string message)
+        public static void HandlePing(string message)
         {
             LoggingService.Current.Log($"Ping signal recieved with message:{message}", LogType.Incoming, LogLevel.Debug);
         }
