@@ -19,6 +19,19 @@ namespace Clapton.Extensions
             return obj.Equals(value, StringComparison.InvariantCultureIgnoreCase);
         }
 
+        /// <summary>
+        /// Determines whether the given <see cref="string"/> matches any specified <see cref="string"/>, ignoring the case of the strings being compared.
+        /// </summary>
+        /// <param name="obj">The selected <see cref="string"/> object</param>
+        /// <param name="value">The <see cref="string"/> to compare to this instance</param>
+        /// <returns></returns>
+        public static bool EqualsIgnoreCase(this string obj, params string[] values)
+        {
+            foreach (string value in values)
+                if (obj.Equals(value, StringComparison.OrdinalIgnoreCase)) return true;
+            return false;
+        }
+
         public static int? ToNullableInt(this string obj)
         {
             int value;
