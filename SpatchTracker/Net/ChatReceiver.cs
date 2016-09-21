@@ -22,7 +22,7 @@ namespace SpatchTracker.Net
         {
             ListenerServer = new HttpServer(new HttpRequestProvider());
 
-            MessageTypesInfo = typeof(MessageTypes).GetMethods().Where(x => x.GetCustomAttributes(false).OfType<MessageType>().Count() > 0).ToList();
+            MessageTypesInfo = typeof(MessageHandlers).GetMethods().Where(x => x.GetCustomAttributes(false).OfType<MessageType>().Count() > 0).ToList();
 
             try
             {
