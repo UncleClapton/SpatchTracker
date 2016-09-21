@@ -4,9 +4,17 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SpatchTracker"
+        xmlns:services="clr-namespace:SpatchTracker.Services"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="800">
+        GlowBrush="{DynamicResource AccentColorBrush}"
+        NonActiveBorderBrush="{x:Null}"
+        WindowTitleBrush="{x:Null}"
+        NonActiveWindowTitleBrush="{x:Null}"
+        NonActiveGlowBrush="{x:Null}"
+        TitleCaps="False"
+        Background="#FF2D2D30"
+        Title="Fuel Rats SpatchTracker" Height="600" Width="800">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -15,8 +23,11 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
+
+        <Controls:MetroAnimatedSingleRowTabControl Margin="10,5"/>
+
         <StatusBar Height="24" VerticalContentAlignment="Center" Margin="0" Grid.Row="2" Grid.ColumnSpan="2" Background="{DynamicResource AccentColorBrush}">
-            <TextBlock Text="{Binding CurrentStatusMsg, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:MainWindow}}}"/>
+            <TextBlock Text="{Binding Source={x:Static services:StatusService.Current}, Path=StatusMessage}"/>
         </StatusBar>
     </Grid>
 </Controls:MetroWindow>
