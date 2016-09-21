@@ -71,11 +71,11 @@ namespace SpatchTracker.Services
             _NotificationMessage = message;
             this.RaisePropertyChanged(nameof(StatusMessage));
 
-            Task.Run(async () =>
+            Task.Run(() =>
             {
-                await Task.Delay(2000);
+                Thread.Sleep(5000);
                 _NotificationMessage = null;
-                this.RaisePropertyChanged(nameof(StatusMessage));
+                RaisePropertyChanged(nameof(StatusMessage));
             });
 
             return;
