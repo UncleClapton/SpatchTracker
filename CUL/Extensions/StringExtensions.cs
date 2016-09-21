@@ -26,6 +26,13 @@ namespace Clapton.Extensions
             return null;
         }
 
+        public static bool StartsWith(this string obj, params string[] values)
+        {
+            foreach (string value in values)
+                if (obj.StartsWith(values)) return true;
+            return false;
+        }
+
         /// <summary>
         /// 
         /// </summary>
