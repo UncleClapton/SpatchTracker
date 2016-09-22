@@ -24,11 +24,17 @@ namespace SpatchTracker.Services
         #region AddRescue
         public void AddRescue(Rescue newRescue)
         {
-            if (CurrentRescues.Find(x => x.BoardID == newRescue.BoardID) == null)
+            //reject the new case if the ID conflicts, Better handling with a "conflict holding done" will be done eventually. Notify the user of it and log the error.
+            if (CurrentRescues.Find(x => x.BoardID == newRescue.BoardID) != null)
             {
-                CurrentRescues.Add(newRescue);
-                this.RaisePropertyChanged(nameof(CurrentRescues));
+                LoggingService.Current.Log($"Recieived Conflicting Case ID, (Case #{newRescue.BoardID}) Rejecting new case until the old case is clear.", LogType.Error, LogLevel.Error);
+                StatusService.Current.Notify($"Recieived Conflicting Case ID (Case #{newRescue.BoardID})! New case has been rejected.");
+                return;
             }
+
+            CurrentRescues.Add(newRescue);
+            this.RaisePropertyChanged(nameof(CurrentRescues));
+            StatusService.Current.Notify($"A new rescue has arrived!");
         }
         #endregion
 
@@ -39,6 +45,7 @@ namespace SpatchTracker.Services
             {
                 CurrentRescues.Remove(rescue);
                 this.RaisePropertyChanged(nameof(CurrentRescues));
+                StatusService.Current.Notify($"{rescue.ClientName}'s rescue has been cleared!");
             }
         }
         public void ClearRescue(int caseID)
@@ -46,8 +53,7 @@ namespace SpatchTracker.Services
             Rescue curRescue = CurrentRescues.Find(x => x.BoardID == caseID);
             if (curRescue != null)
             {
-                CurrentRescues.Remove(curRescue);
-                this.RaisePropertyChanged(nameof(CurrentRescues));
+                ClearRescue(curRescue);
             }
         }
         public void ClearRescue(string clientName)
@@ -55,8 +61,7 @@ namespace SpatchTracker.Services
             Rescue curRescue = CurrentRescues.Find(x => clientName.EqualsIgnoreCase(x.ClientName, x.ClientNick));
             if (curRescue != null)
             {
-                CurrentRescues.Remove(curRescue);
-                this.RaisePropertyChanged(nameof(CurrentRescues));
+                ClearRescue(curRescue);
             }
         }
         #endregion
