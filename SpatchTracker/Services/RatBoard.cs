@@ -9,9 +9,17 @@ namespace SpatchTracker.Services
     //This will probably be moved, but we will keep it here for now.
     public class RatBoard : NotificationObject
     {
-        private List<Rescue> CurrentRescues { get; set; }
+        public static RatBoard Current { get; private set; }
 
-        
+        public static void Load()
+        {
+            if (Current == null)
+            {
+                Current = new RatBoard();
+            }
+        }
+
+        private List<Rescue> CurrentRescues { get; set; }
 
         #region AddRescue
         public void AddRescue(Rescue newRescue)

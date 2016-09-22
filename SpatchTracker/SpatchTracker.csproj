@@ -121,6 +121,7 @@
     <Compile Include="Net\MessageHandlers.cs" />
     <Compile Include="Services\LoggingService.cs" />
     <Compile Include="Services\ProductInfo.cs" />
+    <Compile Include="Services\RatBoard.cs" />
     <Compile Include="Services\Settings.cs" />
     <Compile Include="Services\StatusService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
