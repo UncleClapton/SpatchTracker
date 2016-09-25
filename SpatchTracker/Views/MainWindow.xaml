@@ -1,9 +1,9 @@
-﻿<Controls:MetroWindow x:Class="SpatchTracker.MainWindow"
+﻿<Controls:MetroWindow x:Class="SpatchTracker.Views.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:SpatchTracker"
+        xmlns:local="clr-namespace:SpatchTracker.Views"
         xmlns:services="clr-namespace:SpatchTracker.Services"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         mc:Ignorable="d"
@@ -24,7 +24,17 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
-        <Controls:MetroAnimatedSingleRowTabControl Margin="10,5"/>
+        <Controls:MetroAnimatedSingleRowTabControl Margin="10,5">
+            <TabItem Header="Active Rescues">
+                <ListView x:Name="RescuesListView">
+                    <ListView.ItemTemplate>
+                        <DataTemplate x:Name="RescueTemplate" >
+                            
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </TabItem>
+        </Controls:MetroAnimatedSingleRowTabControl>
 
         <StatusBar Height="24" VerticalContentAlignment="Center" Margin="0" Grid.Row="2" Grid.ColumnSpan="2" Background="{DynamicResource AccentColorBrush}">
             <TextBlock Text="{Binding Source={x:Static services:StatusService.Current}, Path=StatusMessage}"/>

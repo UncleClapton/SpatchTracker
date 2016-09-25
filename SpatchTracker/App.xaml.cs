@@ -1,6 +1,7 @@
 ﻿using Clapton.Exceptions;
 using Livet;
 using SpatchTracker.Services;
+using SpatchTracker.Views;
 using System;
 using System.Windows;
 

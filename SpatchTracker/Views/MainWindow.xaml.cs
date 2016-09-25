@@ -2,7 +2,7 @@
 using SpatchTracker.Services;
 using Clapton.Extensions;
 
-namespace SpatchTracker
+namespace SpatchTracker.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
