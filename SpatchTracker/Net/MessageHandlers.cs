@@ -39,10 +39,10 @@ namespace SpatchTracker.Net
             }
         }
 
-        [MessageType("ping")]
-        public static void HandlePing(string message)
+        [MessageType("test")]
+        public static void HandleTest(string message)
         {
-            LoggingService.Current.Log($"Ping signal recieved with message:{message}", LogType.Incoming, LogLevel.Debug);
+            LoggingService.Current.Log(nameof(MessageHandlers), $"Test signal recieved with message:{message}", LogLevel.Debug);
         }
     }
 }
