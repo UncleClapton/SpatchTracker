@@ -26,12 +26,12 @@ namespace SpatchTracker.Net
 
             try
             {
-                LoggingService.Current.Log("Starting Chat Event Receiver.", LogType.Info, LogLevel.Verbose);
+                LoggingService.Current.Log(nameof(ChatReceiver), "Starting Chat Event Receiver.", LogLevel.Verbose);
                 ListenerServer.Use(new TcpListenerAdapter(new TcpListener(IPAddress.Loopback, 4378)));
             }
             catch (Exception e)
             {
-                LoggingService.Current.Log("Unable to start Chat Event Receiver. Possible port conflict! Check error logs.", LogType.Error, LogLevel.Error);
+                LoggingService.Current.Log(nameof(ChatReceiver), "Unable to start Chat Event Receiver. Possible port conflict! Check error logs.", LogLevel.Error);
                 Clapton.Exceptions.ExceptionHandling.ReportException(this, e);
             }
 
@@ -40,7 +40,7 @@ namespace SpatchTracker.Net
                 if (context.Request.Method == HttpMethods.Post)
                 {
                     var messageType = context.Request.GetQueryStringProperty("mt") ?? "none";
-
+                    
                     Task.Run(() =>
                     {
                         try
@@ -50,17 +50,17 @@ namespace SpatchTracker.Net
                         }
                         catch (InvalidOperationException)
                         {
-                            LoggingService.Current.Log($"ChatReceiver has recieved a message, but it is of invalid message type. mt={messageType}", LogType.Error, LogLevel.Error);
+                            LoggingService.Current.Log(nameof(ChatReceiver), $"ChatReceiver has recieved a message, but it is of invalid message type. mt={messageType}",  LogLevel.Error);
                         }
                     });
 
-                    context.Response = HttpResponse.CreateWithMessage(HttpResponseCode.Ok, "Message recieved, We can handle it from here.", false);
+                    context.Response = HttpResponse.CreateWithMessage(HttpResponseCode.Ok, "Message recieved.", false);
                     return next();
                 }
                 else
                 {
-                    LoggingService.Current.Log("ChatReceiver has recieved a message, but it is of invalid request method.", LogType.Info, LogLevel.Info);
-                    context.Response = HttpResponse.CreateWithMessage(HttpResponseCode.BadRequest, "Bad method. This server only accepts POST requests.", false);
+                    LoggingService.Current.Log(nameof(ChatReceiver), "ChatReceiver has recieved a message, but it is of invalid request method.",  LogLevel.Info);
+                    context.Response = HttpResponse.CreateWithMessage(HttpResponseCode.BadRequest, "This server only accepts POST requests.", false);
                     return next();
                 }
             });

@@ -27,13 +27,14 @@ namespace SpatchTracker.Services
             //reject the new case if the ID conflicts, Better handling with a "conflict holding done" will be done eventually. Notify the user of it and log the error.
             if (CurrentRescues.Find(x => x.BoardID == newRescue.BoardID) != null)
             {
-                LoggingService.Current.Log($"Recieived Conflicting Case ID, (Case #{newRescue.BoardID}) Rejecting new case until the old case is clear.", LogType.Error, LogLevel.Error);
+                LoggingService.Current.Log(nameof(RatBoard), $"Recieived Conflicting Case ID, (Case #{newRescue.BoardID}) Rejecting new case until the old case is clear.",  LogLevel.Error);
                 StatusService.Current.Notify($"Recieived Conflicting Case ID (Case #{newRescue.BoardID})! New case has been rejected.");
                 return;
             }
 
             CurrentRescues.Add(newRescue);
             this.RaisePropertyChanged(nameof(CurrentRescues));
+            LoggingService.Current.Log(nameof(RatBoard), $"New rescue arrived! Case #{newRescue.BoardID} added to the board.", LogLevel.Info);
             StatusService.Current.Notify($"A new rescue has arrived!");
         }
         #endregion
@@ -45,6 +46,7 @@ namespace SpatchTracker.Services
             {
                 CurrentRescues.Remove(rescue);
                 this.RaisePropertyChanged(nameof(CurrentRescues));
+                LoggingService.Current.Log(nameof(RatBoard), $"Rescue Cleared! Case #{rescue.BoardID} has been cleared!", LogLevel.Info);
                 StatusService.Current.Notify($"{rescue.ClientName}'s rescue has been cleared!");
             }
         }

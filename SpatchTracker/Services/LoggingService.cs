@@ -25,11 +25,11 @@ namespace SpatchTracker.Services
         {
             if (Current != null)
             {
-                Current.Log("Incoming", LogType.Incoming, LogLevel.Info);
-                Current.Log("Outgoing", LogType.Outgoing, LogLevel.Info);
-                Current.Log("Info", LogType.Info, LogLevel.Info);
-                Current.Log("Error", LogType.Error, LogLevel.Error);
-                Current.Log("Alert", LogType.Alert, LogLevel.Error);
+                Current.Log(nameof(LoggingService), "Incoming", LogLevel.Info);
+                Current.Log(nameof(LoggingService), "Outgoing", LogLevel.Info);
+                Current.Log(nameof(LoggingService), "Info", LogLevel.Info);
+                Current.Log(nameof(LoggingService), "Error", LogLevel.Error);
+                Current.Log(nameof(LoggingService), "Alert", LogLevel.Error);
             }
         }
         #endregion
@@ -52,34 +52,11 @@ namespace SpatchTracker.Services
         #region Methods
 
         #region Log
-        public void Log(string message, LogType logType, LogLevel logLevel)
+        public void Log(string sender, string message, LogLevel logLevel)
         {
             if (Settings.Current.LoggerLevel < Convert.ToInt32(logLevel)) return;
 
-            string prefix;
-            switch (logType)
-            {
-                case LogType.Incoming:
-                    prefix = "<<";
-                    break;
-                case LogType.Outgoing:
-                    prefix = ">>";
-                    break;
-                case LogType.Info:
-                    prefix = "**";
-                    break;
-                case LogType.Error:
-                    prefix = "XX";
-                    break;
-                case LogType.Alert:
-                    prefix = "!!";
-                    break;
-                default:
-                    prefix = "??";
-                    break;
-            }
-
-            Clapton.IO.File.TryWriteToFile(_SessionLogFilePath, String.Format("{2:HH:mm:ss} {0} {1}", prefix, message, DateTime.Now) + Environment.NewLine, true);
+            Clapton.IO.File.TryWriteToFile(_SessionLogFilePath, String.Format("{0:HH:mm:ss} | {1} | {2} | {3}",DateTime.Now, sender, logLevel.ToString(), message) + Environment.NewLine, true);
             return;
         }
         #endregion
@@ -97,17 +74,6 @@ namespace SpatchTracker.Services
 
         #endregion
     }
-
-    #region LogType enum
-    public enum LogType
-    {
-        Incoming,
-        Outgoing,
-        Info,
-        Error,
-        Alert
-    }
-    #endregion
 
     #region LogLevel enum
     public enum LogLevel

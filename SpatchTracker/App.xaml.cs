@@ -37,7 +37,7 @@ namespace SpatchTracker
             StatusService.Current.Notify("Welcome to SpatchTracker " + ProductInfo.VersionString);
 
             LoggingService.Load();
-            LoggingService.Current.Log("AppSessionBegin - " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), LogType.Info, LogLevel.Info);
+            LoggingService.Current.Log(nameof(App), "AppSessionBegin - " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), LogLevel.Info);
 
             MainWindow = new MainWindow();
             MainWindow.Show();
@@ -53,7 +53,7 @@ namespace SpatchTracker
         {
             base.OnExit(e);
             Settings.Current.SaveToFile();
-            LoggingService.Current.Log("AppSessionEnd - " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), LogType.Info, LogLevel.Info);
+            LoggingService.Current.Log(nameof(App), "AppSessionEnd - " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), LogLevel.Info);
             ListenerReceiver.Dispose();
         }
 
