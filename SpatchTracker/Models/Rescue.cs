@@ -11,7 +11,8 @@ namespace SpatchTracker.Models
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
         public int BoardID { get; set; } = 100;
-        public List<RescueRat> AssignedRats { get; set; } = new List<RescueRat>();
+        //              Rat name, Rat info
+        public Dictionary<string, RescueRat> AssignedRats { get; set; } = new Dictionary<string, RescueRat>();
         public List<string> Quotes { get; set; } = new List<string>();
         public Platform Platform { get; set; } = Platform.PC;
         public string ClientName { get; set; } = "";

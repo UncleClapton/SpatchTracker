@@ -26,7 +26,7 @@
         <Label x:Name="CaseLabel" Content="#" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
         <Label x:Name="ClientLabel" Content="Rescue Of" Margin="64,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Height="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
 
-        <ListView x:Name="RatListBox" ItemsSource="{Binding AssignedRats}" Margin="10,10,5,10" Grid.Row="1">
+        <ListView x:Name="RatListBox" ItemsSource="{Binding AssignedRats.Values}" Margin="10,10,5,10" Grid.Row="1" BorderBrush="#00000000">
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <local:RescueRatView />
