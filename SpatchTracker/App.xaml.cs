@@ -40,12 +40,14 @@ namespace SpatchTracker
             LoggingService.Load();
             LoggingService.Current.Log(nameof(App), "AppSessionBegin - " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), LogLevel.Info);
 
+            RatBoard.Load();
+
+            ListenerReceiver = new Net.ChatReceiver();
+
             MainWindow = new MainWindow();
             MainWindow.Show();
 
             MainWindow.Closing += MainWindow_Closing;
-
-            ListenerReceiver = new Net.ChatReceiver();
 
             StatusService.Current.Set("Ready.");
         }
