@@ -3,6 +3,7 @@ using Livet;
 using SpatchTracker.Models;
 using System.Linq;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace SpatchTracker.Services
 {
@@ -18,21 +19,26 @@ namespace SpatchTracker.Services
                 Current = new RatBoard();
             }
         }
+        //              case#, Rescue Info
+        public Dictionary<int, Rescue> CurrentRescues { get; set; }
 
-        private List<Rescue> CurrentRescues { get; set; }
+        public RatBoard()
+        {
+            CurrentRescues = new Dictionary<int, Rescue>();
+        }
 
         #region AddRescue
         public void AddRescue(Rescue newRescue)
         {
             //reject the new case if the ID conflicts, Better handling with a "conflict holding done" will be done eventually. Notify the user of it and log the error.
-            if (CurrentRescues.Find(x => x.BoardID == newRescue.BoardID) != null)
+            if (CurrentRescues.Where(x => x.Key == newRescue.BoardID).Count() > 0)
             {
                 LoggingService.Current.Log(nameof(RatBoard), $"Recieived Conflicting Case ID, (Case #{newRescue.BoardID}) Rejecting new case until the old case is clear.",  LogLevel.Error);
                 StatusService.Current.Notify($"Recieived Conflicting Case ID (Case #{newRescue.BoardID})! New case has been rejected.");
                 return;
             }
 
-            CurrentRescues.Add(newRescue);
+            CurrentRescues.Add(newRescue.BoardID, newRescue);
             this.RaisePropertyChanged(nameof(CurrentRescues));
             LoggingService.Current.Log(nameof(RatBoard), $"New rescue arrived! Case #{newRescue.BoardID} added to the board.", LogLevel.Info);
             StatusService.Current.Notify($"A new rescue has arrived!");
@@ -40,32 +46,42 @@ namespace SpatchTracker.Services
         #endregion
 
         #region ClearRescue
-        public void ClearRescue(Rescue rescue)
+        public void ClearRescue(int caseID)
+        {
+            if(CurrentRescues.ContainsKey(caseID))
+            {
+                string clientName = CurrentRescues[caseID].ClientName;
+                CurrentRescues.Remove(caseID);
+                this.RaisePropertyChanged(nameof(CurrentRescues));
+                LoggingService.Current.Log(nameof(RatBoard), $"{clientName} (Case #{caseID}) has been cleared.", LogLevel.Info);
+                StatusService.Current.Notify($"{clientName}'s rescue has been cleared!");
+            }
+        }
+
+        public void ClearRescue(string clientName)
+        {
+            //TODO
+        }
+        #endregion
+
+        #region AssignRat
+        private void AssignRat(Rescue rescue, RescueRat newRat)
         {
             if(CurrentRescues.Contains(rescue))
             {
-                CurrentRescues.Remove(rescue);
+                CurrentRescues.Where(x => x == rescue).First().
+
                 this.RaisePropertyChanged(nameof(CurrentRescues));
-                LoggingService.Current.Log(nameof(RatBoard), $"Rescue Cleared! Case #{rescue.BoardID} has been cleared!", LogLevel.Info);
-                StatusService.Current.Notify($"{rescue.ClientName}'s rescue has been cleared!");
+                LoggingService.Current.Log(nameof(RatBoard), $"Rat {newRat.CmdrName} was assigned to {CurrentRescues[index].ClientName}", LogLevel.Info);
+                StatusService.Current.Notify($"{newRat.CmdrName} was assigned to a case!");
             }
         }
-        public void ClearRescue(int caseID)
+
+        public void AssignRat(int boardIndex, RescueRat newRat)
         {
-            Rescue curRescue = CurrentRescues.Find(x => x.BoardID == caseID);
-            if (curRescue != null)
-            {
-                ClearRescue(curRescue);
-            }
+
         }
-        public void ClearRescue(string clientName)
-        {
-            Rescue curRescue = CurrentRescues.Find(x => clientName.EqualsIgnoreCase(x.ClientName, x.ClientNick));
-            if (curRescue != null)
-            {
-                ClearRescue(curRescue);
-            }
-        }
+
         #endregion
 
     }
