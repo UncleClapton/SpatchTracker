@@ -27,7 +27,7 @@
 
         <Controls:MetroAnimatedSingleRowTabControl Margin="10,5">
             <TabItem Header="Active Rescues">
-                <ListView x:Name="rescueListBox" ItemsSource="{Binding Source={x:Static services:RatBoard.Current}, Path=CurrentRescues}" Margin="5">
+                <ListView x:Name="rescueListBox" ItemsSource="{Binding Source={x:Static services:RatBoard.Current}, Path=CurrentRescues.Values}" Margin="5" BorderBrush="#00000000">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <contentViews:RescueView />
