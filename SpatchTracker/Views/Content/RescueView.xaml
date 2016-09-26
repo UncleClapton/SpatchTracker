@@ -1,12 +1,14 @@
-﻿<UserControl x:Class="SpatchTracker.Views.Content.RescueView"
+﻿<UserControl
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:models="clr-namespace:SpatchTracker.Models"
              xmlns:local="clr-namespace:SpatchTracker.Views.Content"
+             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             x:Class="SpatchTracker.Views.Content.RescueView"
              mc:Ignorable="d" 
-             d:DataContext="{d:DesignInstance models:Rescue}"
+             d:DataContext="{d:DesignInstance {x:Type models:Rescue}}"
              d:DesignHeight="200" d:DesignWidth="800">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -15,13 +17,21 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="44px" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <TextBox x:Name="CaseNumberTextBox" HorizontalAlignment="Left" Margin="32,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="32" Height="24" Text="{Binding BoardID}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
-        <TextBox x:Name="ClientNameTextBox" Grid.Column="0" HorizontalAlignment="Left" Height="24" Margin="137,10,0,0" TextWrapping="Wrap" Text="{Binding ClientName}" VerticalAlignment="Top" Width="150" VerticalContentAlignment="Center"/>
-        <TextBox x:Name="ClientLocationTextBox" Height="23" Margin="317,10,13,0" TextWrapping="Wrap" Text="{Binding System}" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
-        <Label x:Name="LocLabel" Content="in" HorizontalAlignment="Left" Margin="292,10,0,0" VerticalAlignment="Top"/>
+        <TextBox x:Name="CaseNumberTextBox" HorizontalAlignment="Left" Margin="27,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="32" Height="24" Text="{Binding BoardID}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" controls:TextBoxHelper.Watermark="#"/>
+        <TextBox x:Name="ClientNameTextBox" Grid.Column="0" HorizontalAlignment="Left" Height="24" Margin="127,10,0,0" TextWrapping="Wrap" Text="{Binding ClientName}" VerticalAlignment="Top" Width="150" VerticalContentAlignment="Center" controls:TextBoxHelper.Watermark="Cmdr Name"/>
+        <TextBox x:Name="ClientLocationTextBox" Height="23" Margin="307,10,5,0" TextWrapping="Wrap" Text="{Binding System}" VerticalAlignment="Top" VerticalContentAlignment="Center" controls:TextBoxHelper.Watermark="System"/>
+        <Label x:Name="LocLabel" Content="in" HorizontalAlignment="Left" Margin="282,10,0,0" VerticalAlignment="Top"/>
         <Label x:Name="CaseLabel" Content="#" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-        <Label x:Name="ClientLabel" Content="Rescue Of" Margin="69,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Height="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <Label x:Name="ClientLabel" Content="Rescue Of" Margin="64,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Height="24" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
 
+        <ListView x:Name="RatListBox" ItemsSource="{Binding AssignedRats}" Margin="10,10,5,10" Grid.Row="1">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <local:RescueRatView />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </Grid>
 </UserControl>

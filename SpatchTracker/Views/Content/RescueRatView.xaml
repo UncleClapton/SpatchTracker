@@ -1,0 +1,24 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:models="clr-namespace:SpatchTracker.Models"
+             xmlns:local="clr-namespace:SpatchTracker.Views.Content"
+             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+             x:Class="SpatchTracker.Views.Content.RescueRatView"
+             mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance {x:Type models:RescueRat}}"
+             d:DesignHeight="46" d:DesignWidth="720">
+    <Grid>
+        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="26" Margin="0,10,0,0" TextWrapping="Wrap" Text="{Binding CmdrName}" VerticalAlignment="Top" Width="150" controls:TextBoxHelper.Watermark="Cmdr" controls:TextBoxHelper.ClearTextButton="True"/>
+        <ToggleButton x:Name="friendButton" Content="Fr+"   Margin="155,10,0,0" Width="40" Height="26" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="{Binding IsFriend, Mode=TwoWay}"/>
+        <ToggleButton x:Name="systemButton" Content="Sys+"  Margin="200,10,0,0" Width="40" Height="26" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="{Binding IsInSystem, Mode=TwoWay}"/>
+        <ToggleButton x:Name="wingButton"   Content="Wg+"   Margin="245,10,0,0" Width="40" Height="26" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="{Binding IsInWing, Mode=TwoWay}"/>
+        <ToggleButton x:Name="beaconButton" Content="Bc+"   Margin="290,10,0,0" Width="40" Height="26" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="{Binding HasBeaconVisual, Mode=TwoWay}"/>
+        <ToggleButton x:Name="fuelButton"   Content="Fuel+" Margin="335,10,0,0" Width="40" Height="26" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="{Binding HasRefueled, Mode=TwoWay}"/>
+        <ToggleButton x:Name="instButton"   Content="Ins-"  Margin="380,10,0,0" Width="40" Height="26" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="{Binding HasBadInstance, Mode=TwoWay}"/>
+        <ToggleButton x:Name="dcButton"     Content="DC"    Margin="425,10,0,0" Width="40" Height="26" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="{Binding IsDisconnected, Mode=TwoWay}"/>
+        <ToggleButton x:Name="intButton"    Content="Int"   Margin="470,10,0,0" Width="40" Height="26" HorizontalAlignment="Left" VerticalAlignment="Top" IsChecked="{Binding IsInterdicted, Mode=TwoWay}"/>
+    </Grid>
+</UserControl>

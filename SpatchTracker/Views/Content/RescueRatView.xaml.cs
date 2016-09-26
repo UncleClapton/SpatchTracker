@@ -16,13 +16,13 @@ using System.Windows.Shapes;
 namespace SpatchTracker.Views.Content
 {
     /// <summary>
-    /// Interaction logic for UserControl1.xaml
+    /// Interaction logic for RescueRatView.xaml
     /// </summary>
-    public partial class RescueView : UserControl
+    public partial class RescueRatView : UserControl
     {
-        public RescueView()
+        public RescueRatView()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
     }
 }

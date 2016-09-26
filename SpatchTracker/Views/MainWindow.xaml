@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SpatchTracker.Views"
+        xmlns:contentViews="clr-namespace:SpatchTracker.Views.Content"
         xmlns:services="clr-namespace:SpatchTracker.Services"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         mc:Ignorable="d"
@@ -26,10 +27,10 @@
 
         <Controls:MetroAnimatedSingleRowTabControl Margin="10,5">
             <TabItem Header="Active Rescues">
-                <ListView x:Name="RescuesListView">
+                <ListView x:Name="rescueListBox" ItemsSource="{Binding Source={x:Static services:RatBoard.Current}, Path=CurrentRescues}" Margin="5">
                     <ListView.ItemTemplate>
-                        <DataTemplate x:Name="RescueTemplate" >
-                            
+                        <DataTemplate>
+                            <contentViews:RescueView />
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>

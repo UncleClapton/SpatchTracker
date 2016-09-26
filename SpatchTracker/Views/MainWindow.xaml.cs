@@ -12,6 +12,13 @@ namespace SpatchTracker.Views
         public MainWindow()
         {
             this.InitializeComponent();
+            RatBoard.Current.Subscribe((sender, args) =>
+            {
+                if (args.PropertyName == nameof(RatBoard.CurrentRescues))
+                {
+                    Dispatcher.Invoke(() => { this.rescueListBox.Items.Refresh(); });
+                }
+            });
         }
     }
 }
