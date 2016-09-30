@@ -13,7 +13,7 @@ namespace SpatchTracker
     public partial class App : Application
     {
         public static ProductInfo ProductInfo { get; private set; }
-        private Net.ChatReceiver ListenerReceiver { get; set; }
+        private Net.HttpWorker ListenerReceiver { get; set; }
         
         
         public App()
@@ -42,7 +42,7 @@ namespace SpatchTracker
 
             RatBoard.Load();
 
-            ListenerReceiver = new Net.ChatReceiver();
+            ListenerReceiver = new Net.HttpWorker(Settings.Current.ReceiverPort, typeof(Net.HttpRequestHandlers));
 
             MainWindow = new MainWindow();
             MainWindow.Show();

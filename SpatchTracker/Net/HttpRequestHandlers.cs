@@ -3,12 +3,13 @@ using SpatchTracker.Models;
 using SpatchTracker.Services;
 using System;
 using System.Text.RegularExpressions;
+using uhttpsharp;
 
 namespace SpatchTracker.Net
 {
-    public static class MessageHandlers
+    public static class HttpRequestHandlers
     {
-        [MessageType("rsig")]
+        [RequestHandler("rsig")]
         public static void HandleRatsignal(string message)
         {
             //EX: RATSIGNAL - CMDR A Client - System: SystemName - Platform: PC - O2: OK - Language: English (en-US) - IRC Nickname: A_Client (Case #1)
@@ -25,11 +26,11 @@ namespace SpatchTracker.Net
             newRescue.CreatedAt = DateTime.Now;
             newRescue.UpdatedAt = DateTime.Now;
 
-            LoggingService.Current.Log(nameof(MessageHandlers), $"Incoming Client: CMDR {newRescue.ClientName} | System: {newRescue.System} | Platform : {newRescue.Platform.ToString()} | CR: {newRescue.CodeRed.ToString()} | Lang: {newRescue.Language} | IRC: {newRescue.ClientNick} | Case #{newRescue.BoardID}", LogLevel.Verbose);
+            LoggingService.Current.Log(nameof(HttpRequestHandlers), $"Incoming Client: CMDR {newRescue.ClientName} | System: {newRescue.System} | Platform : {newRescue.Platform.ToString()} | CR: {newRescue.CodeRed.ToString()} | Lang: {newRescue.Language} | IRC: {newRescue.ClientNick} | Case #{newRescue.BoardID}", LogLevel.Verbose);
             RatBoard.Current.AddRescue(newRescue);
         }
 
-        [MessageType("assign")]
+        [RequestHandler("assign")]
         public static void HandleAssign(string message)
         {
             if (message.StartsWith("!assign", "!go", "!add"))
@@ -38,10 +39,10 @@ namespace SpatchTracker.Net
             }
         }
 
-        [MessageType("test")]
+        [RequestHandler("test")]
         public static void HandleTest(string message)
         {
-            LoggingService.Current.Log(nameof(MessageHandlers), $"Test signal recieved with message:{message}", LogLevel.Debug);
+            LoggingService.Current.Log(nameof(HttpRequestHandlers), $"Test signal recieved with message:{message}", LogLevel.Debug);
         }
     }
 }

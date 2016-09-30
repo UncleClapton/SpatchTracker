@@ -111,8 +111,8 @@
     <Compile Include="Models\Rat.cs" />
     <Compile Include="Models\Rescue.cs" />
     <Compile Include="Models\RescueRat.cs" />
-    <Compile Include="Net\ChatReceiver.cs" />
-    <Compile Include="Net\MessageHandlers.cs" />
+    <Compile Include="Net\HttpWorker.cs" />
+    <Compile Include="Net\HttpRequestHandlers.cs" />
     <Compile Include="Services\LoggingService.cs" />
     <Compile Include="Services\ProductInfo.cs" />
     <Compile Include="Services\RatBoard.cs" />

@@ -13,28 +13,35 @@ using uhttpsharp.RequestProviders;
 
 namespace SpatchTracker.Net
 {
-    public class ChatReceiver : IDisposable
+    public class HttpWorker : IDisposable
     {
         public HttpServer ListenerServer { get; private set; }
         private List<MethodInfo> MessageTypesInfo { get; set; }
 
-        public ChatReceiver()
+        //TODO properly implement POST requests for production.
+        /// <summary>
+        /// Creates a new <see cref="HttpWorker"/> object.
+        /// </summary>
+        /// <param name="listeningPort">Port to listen for requests on</param>
+        /// <param name="RequestHandlers">Type to scan for RequestHandlers</param>
+        public HttpWorker(int listeningPort, Type RequestHandlers)
         {
             ListenerServer = new HttpServer(new HttpRequestProvider());
 
-            MessageTypesInfo = typeof(MessageHandlers).GetMethods().Where(x => x.GetCustomAttributes(false).OfType<MessageType>().Count() > 0).ToList();
+            MessageTypesInfo = RequestHandlers.GetMethods().Where(x => x.GetCustomAttributes(false).OfType<RequestHandler>().Count() > 0).ToList();
 
             try
             {
-                LoggingService.Current.Log(nameof(ChatReceiver), "Starting Chat Event Receiver.", LogLevel.Verbose);
-                ListenerServer.Use(new TcpListenerAdapter(new TcpListener(IPAddress.Loopback, 4378)));
+                LoggingService.Current.Log(nameof(HttpWorker), "Starting Chat Event Receiver.", LogLevel.Verbose);
+                ListenerServer.Use(new TcpListenerAdapter(new TcpListener(IPAddress.Loopback, listeningPort)));
             }
             catch (Exception e)
             {
-                LoggingService.Current.Log(nameof(ChatReceiver), "Unable to start Chat Event Receiver. Possible port conflict! Check error logs.", LogLevel.Error);
+                LoggingService.Current.Log(nameof(HttpWorker), "Unable to start Chat Event Receiver. Possible port conflict! Check error logs.", LogLevel.Error);
                 Clapton.Exceptions.ExceptionHandling.ReportException(this, e);
             }
 
+            //TODO Make this a bit more generic for the sake of expandability. See Issue#2 for the main problem with doing so.
             ListenerServer.Use((context, next) =>
             {
                 if (context.Request.Method == HttpMethods.Post)
@@ -45,12 +52,12 @@ namespace SpatchTracker.Net
                     {
                         try
                         {
-                            MethodInfo method = MessageTypesInfo.Where(x => x.GetCustomAttribute<MessageType>(false).messageCode.ToLower() == messageType.ToLower()).First();
+                            MethodInfo method = MessageTypesInfo.Where(x => x.GetCustomAttribute<RequestHandler>(false).messageCode.ToLower() == messageType.ToLower()).First();
                             method.Invoke(null, new object[] { context.Request.GetQueryStringProperty("msg") });
                         }
                         catch (InvalidOperationException)
                         {
-                            LoggingService.Current.Log(nameof(ChatReceiver), $"ChatReceiver has recieved a message, but it is of invalid message type. mt={messageType}",  LogLevel.Error);
+                            LoggingService.Current.Log(nameof(HttpWorker), $"Recieved a message, but it is of invalid message type. mt={messageType}",  LogLevel.Error);
                         }
                     });
 
@@ -59,7 +66,7 @@ namespace SpatchTracker.Net
                 }
                 else
                 {
-                    LoggingService.Current.Log(nameof(ChatReceiver), "ChatReceiver has recieved a message, but it is of invalid request method.",  LogLevel.Info);
+                    LoggingService.Current.Log(nameof(HttpWorker), "Recieved a message, but it is of invalid request method.",  LogLevel.Info);
                     context.Response = HttpResponse.CreateWithMessage(HttpResponseCode.BadRequest, "This server only accepts POST requests.", false);
                     return next();
                 }
@@ -74,11 +81,11 @@ namespace SpatchTracker.Net
         }
     }
 
-    public class MessageType : Attribute
+    public class RequestHandler : Attribute
     {
         public string messageCode { get; private set; }
 
-        public MessageType(string mt)
+        public RequestHandler(string mt)
         {
             messageCode = mt;
         }
