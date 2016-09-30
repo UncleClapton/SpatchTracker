@@ -19,12 +19,12 @@ namespace SpatchTracker.Services
                 Current = new RatBoard();
             }
         }
-        //              case#, Rescue Info
-        public Dictionary<int, Rescue> CurrentRescues { get; set; }
+        //                        case#, Rescue Info
+        public ObservableDictionary<int, Rescue> CurrentRescues { get; set; }
 
         public RatBoard()
         {
-            CurrentRescues = new Dictionary<int, Rescue>();
+            CurrentRescues = new ObservableDictionary<int, Rescue>();
         }
 
         #region AddRescue
@@ -75,7 +75,6 @@ namespace SpatchTracker.Services
             {
                 CurrentRescues[caseID].AssignedRats.Add(newRat.CmdrName, newRat);
                 this.RaisePropertyChanged(nameof(CurrentRescues));
-                CurrentRescues[caseID].UpdatedAt = DateTime.Now;
                 LoggingService.Current.Log(nameof(RatBoard), $"Rat {newRat.CmdrName} was assigned to {CurrentRescues[caseID].ClientName}.", LogLevel.Info);
                 StatusService.Current.Notify($"{newRat.CmdrName} was assigned to {CurrentRescues[caseID].ClientName}.");
             }
@@ -97,7 +96,6 @@ namespace SpatchTracker.Services
             {
                 CurrentRescues[caseID].AssignedRats.Remove(ratName);
                 this.RaisePropertyChanged(nameof(CurrentRescues));
-                CurrentRescues[caseID].UpdatedAt = DateTime.Now;
                 LoggingService.Current.Log(nameof(RatBoard), $"Rat {ratName} was removed from {CurrentRescues[caseID].ClientName}'s case.", LogLevel.Info);
                 StatusService.Current.Notify($"{ratName} was removed from {CurrentRescues[caseID].ClientName}'s case.");
             }

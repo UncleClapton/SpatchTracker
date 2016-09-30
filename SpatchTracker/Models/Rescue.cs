@@ -212,10 +212,11 @@ namespace SpatchTracker.Models
                 if (args.PropertyName != nameof(UpdatedAt))
                     UpdatedAt = DateTime.Now;
             });
-            assignedRats.CollectionChanged += (sender, args) =>
+            assignedRats.Subscribe((sender, args) =>
             {
                 UpdatedAt = DateTime.Now;
-            };
+            });
+
         }
     }
 }
