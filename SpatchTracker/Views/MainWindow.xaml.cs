@@ -1,6 +1,6 @@
-﻿using MahApps.Metro.Controls;
+﻿using Clapton.Extensions;
+using MahApps.Metro.Controls;
 using SpatchTracker.Services;
-using Clapton.Extensions;
 
 namespace SpatchTracker.Views
 {

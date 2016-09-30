@@ -3,7 +3,6 @@ using SpatchTracker.Models;
 using SpatchTracker.Services;
 using System;
 using System.Text.RegularExpressions;
-using uhttpsharp;
 
 namespace SpatchTracker.Net
 {

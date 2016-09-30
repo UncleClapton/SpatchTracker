@@ -1,8 +1,8 @@
-﻿using Livet;
+﻿using Clapton.Collections;
+using Clapton.Extensions;
+using Livet;
 using System;
 using System.Collections.Generic;
-using Clapton.Extensions;
-using Clapton.Collections;
 
 namespace SpatchTracker.Models
 {

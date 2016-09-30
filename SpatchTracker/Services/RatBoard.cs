@@ -1,10 +1,9 @@
-﻿using Clapton.Extensions;
+﻿using Clapton.Collections;
+using Clapton.Extensions;
 using Livet;
 using SpatchTracker.Models;
-using System.Linq;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System;
+using System.Linq;
 
 namespace SpatchTracker.Services
 {
