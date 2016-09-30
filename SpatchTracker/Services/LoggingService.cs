@@ -50,11 +50,11 @@ namespace SpatchTracker.Services
         #region Methods
 
         #region Log
-        public void Log(string sender, string message, LogLevel logLevel)
+        public void Log(string sender, string message, LogLevel logLevel, string filename = null)
         {
             if (Settings.Current.LoggerLevel < Convert.ToInt32(logLevel)) return;
 
-            Clapton.IO.File.TryWriteToFile(_SessionLogFilePath, String.Format("{0:HH:mm:ss} | {1} | {2} | {3}",DateTime.Now, sender, logLevel.ToString(), message) + Environment.NewLine, true);
+            Clapton.IO.File.TryWriteToFile(filename ?? _SessionLogFilePath, String.Format("{0:HH:mm:ss} | {1} | {2} | {3}",DateTime.Now, sender, logLevel.ToString(), message) + Environment.NewLine, true);
             return;
         }
         #endregion
