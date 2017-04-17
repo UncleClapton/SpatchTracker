@@ -1,2 +1,2 @@
 # SpatchTracker
-FuelRats Dispatcher rescue tracking. With planned support for both API calling and chat listening.
+Abandoned in favor of the offical FuelRats Dispatch Web Board https://github.com/FuelRats/DispatchWebBoard
